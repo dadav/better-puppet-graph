@@ -7,6 +7,7 @@ from itertools import cycle
 
 graph = pydot.graph_from_dot_file(sys.argv[1])
 dot = graph[0]
+dot.set_rankdir("LR")
 
 relations = defaultdict(list)
 nodes = dict()
