@@ -3,7 +3,6 @@
 import pydot
 import sys
 from collections import defaultdict
-from itertools import cycle
 
 graph = pydot.graph_from_dot_file(sys.argv[1])
 dot = graph[0]
@@ -11,8 +10,6 @@ dot.set_rankdir("LR")
 
 relations = defaultdict(list)
 nodes = dict()
-
-c = cycle(["red", "blue"])
 
 for node in dot.get_nodes():
     nodes[node.get_name()] = node
@@ -26,9 +23,7 @@ for src, dst_list in relations.items():
     s = pydot.Subgraph(rank='same')
     node_color = c.__next__()
     for dst in dst_list:
-        node = nodes[dst]
-        node.set_fillcolor(node_color)
-        s.add_node(node)
+        s.add_node(nodes[dst])
     dot.add_subgraph(s)
 
 dot.write('output.dot')
