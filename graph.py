@@ -1,29 +1,35 @@
 #!/usr/bin/env python
 
+from collections import defaultdict
 import pydot
 import sys
-from collections import defaultdict
 
-graph = pydot.graph_from_dot_file(sys.argv[1])
-dot = graph[0]
-dot.set_rankdir("LR")
 
-relations = defaultdict(list)
-nodes = dict()
+GRAPH = pydot.graph_from_dot_file(sys.argv[1])
+DOT = GRAPH[0]
+DOT.set_rankdir("LR")
 
-for node in dot.get_nodes():
-    nodes[node.get_name()] = node
+RELATIONS = defaultdict(list)
+NODES = dict()
 
-for edge in dot.get_edges():
+for node in DOT.get_nodes():
+    if 'Admissible_' in node.get_name():
+        node.set_style('filled')
+        node.set_color('Green')
+    elif 'Completed_' in node.get_name():
+        node.set_style('filled')
+        node.set_color('Red')
+    NODES[node.get_name()] = node
+
+for edge in DOT.get_edges():
     src = edge.get_source()
     dst = edge.get_destination()
-    relations[src].append(dst)
+    RELATIONS[src].append(dst)
 
-for src, dst_list in relations.items():
+for src, dst_list in RELATIONS.items():
     s = pydot.Subgraph(rank='same')
-    node_color = c.__next__()
     for dst in dst_list:
-        s.add_node(nodes[dst])
-    dot.add_subgraph(s)
+        s.add_node(NODES[dst])
+    DOT.add_subgraph(s)
 
-dot.write('output.dot')
+DOT.write('output.dot')
