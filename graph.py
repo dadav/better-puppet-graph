@@ -1,35 +1,27 @@
 #!/usr/bin/env python
 
-from collections import defaultdict
 import pydot
 import sys
+import re
+import networkx as nx
 
 
-GRAPH = pydot.graph_from_dot_file(sys.argv[1])
-DOT = GRAPH[0]
-DOT.set_rankdir("LR")
-
-RELATIONS = defaultdict(list)
-NODES = dict()
+DOT = pydot.graph_from_dot_file(sys.argv[1])[0]
+GRAPH = nx.DiGraph()
+RE_CLASS = re.compile(r"(?P<status>(Admissible|Completed))_(?P<type>[^\]]+)\[(?P<name>[^\]]+)\]")
+RE_RESOURCE = re.compile(r"(?P<type>[^\]]+)\[(?P<name>[^\]]+)\]")
 
 for node in DOT.get_nodes():
-    if 'Admissible_' in node.get_name():
-        node.set_style('filled')
-        node.set_color('Green')
-    elif 'Completed_' in node.get_name():
-        node.set_style('filled')
-        node.set_color('Red')
-    NODES[node.get_name()] = node
+    NODE_NAME = node.get_name().strip('"')
+    match = RE_CLASS.search(NODE_NAME) or RE_RESOURCE.search(NODE_NAME)
+
+    if match:
+        GRAPH.add_node(NODE_NAME, **match.groupdict())
+
 
 for edge in DOT.get_edges():
-    src = edge.get_source()
-    dst = edge.get_destination()
-    RELATIONS[src].append(dst)
+    src = edge.get_source().strip('"')
+    dst = edge.get_destination().strip('"')
+    GRAPH.add_edge(src, dst)
 
-for src, dst_list in RELATIONS.items():
-    s = pydot.Subgraph(rank='same')
-    for dst in dst_list:
-        s.add_node(NODES[dst])
-    DOT.add_subgraph(s)
-
-DOT.write('output.dot')
+nx.write_gexf(GRAPH, f"{sys.argv[1]}.gexf")
