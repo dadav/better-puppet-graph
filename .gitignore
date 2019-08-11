@@ -144,6 +144,7 @@ dmypy.json
 .pyre/
 
 # out
-output.dot
+*.dot
+*.gexf
 
 # End of https://www.gitignore.io/api/linux,python
