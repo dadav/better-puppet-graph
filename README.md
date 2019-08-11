@@ -12,3 +12,6 @@ gephi output.gefx
 ```
 
 # example
+This is the output of the `ntp- module`. Colorized by type:
+
+![result](result.png)

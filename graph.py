@@ -23,8 +23,7 @@ def main():
 
     dot = pydot.graph_from_dot_file(args.input)[0]
     graph = nx.DiGraph()
-    re_class = re.compile(r"(?P<status>(Admissible|Completed))_\
-                          (?P<type>[^\]]+)\[(?P<name>[^\]]+)\]")
+    re_class = re.compile(r"(?P<status>(Admissible|Completed))_(?P<type>[^\[]+)\[(?P<name>[^\]]+)\]")
     re_resource = re.compile(r"(?P<type>[^\]]+)\[(?P<name>[^\]]+)\]")
 
     for node in dot.get_nodes():
