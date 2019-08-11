@@ -12,14 +12,19 @@ def main():
     Main
     """
     parser = argparse.ArgumentParser(description="Transforms puppet- graphs to gexf files.")
-    parser.add_argument("-i", "--input", dest="input", help="The expanded_relationships.dot file", required=True)
-    parser.add_argument("-c", "--cycles", dest="cycles", action="store_true", help="Colorize cycles")
-    parser.add_argument("-o", "--output", dest="output", help="The output file", default="output.gexf")
+    parser.add_argument("-i", "--input", dest="input",
+                        help="The expanded_relationships.dot file",
+                        required=True)
+    parser.add_argument("-c", "--cycles", dest="cycles",
+                        action="store_true", help="Colorize cycles")
+    parser.add_argument("-o", "--output", dest="output",
+                        help="The output file", default="output.gexf")
     args = parser.parse_args()
 
     dot = pydot.graph_from_dot_file(args.input)[0]
     graph = nx.DiGraph()
-    re_class = re.compile(r"(?P<status>(Admissible|Completed))_(?P<type>[^\]]+)\[(?P<name>[^\]]+)\]")
+    re_class = re.compile(r"(?P<status>(Admissible|Completed))_\
+                          (?P<type>[^\]]+)\[(?P<name>[^\]]+)\]")
     re_resource = re.compile(r"(?P<type>[^\]]+)\[(?P<name>[^\]]+)\]")
 
     for node in dot.get_nodes():
