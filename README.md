@@ -9,6 +9,7 @@ puppet test.pp --noop --graph --graphdir .
 graph.py -c -i expanded_relationships.dot -o output.gefx
 # open with gephi
 gephi output.gefx
+```
 
 # example
 This is the output of the `ntp- module`. Colorized by type:
